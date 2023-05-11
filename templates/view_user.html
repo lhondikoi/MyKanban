@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Dashboard</title>
+<link rel="stylesheet" href="{{  url_for('static', filename='css/view_user.css')  }}">
+{% endblock %}
+
+{% block body %}
+{% include 'dialog.html' %}
+<body>
+    <header id="app-title-bar">
+        <div id="user-menu">
+            <a href="/settings" id="user-settings" role="button"><i class="bi bi-person-circle"></i></a>
+            <span>Welcome back, {{user.user_name}}!</span>
+        </div>
+        <span id="app-title">MyKanban</span>
+        <a href="/logout">Logout</a>
+    </header>
+    <div id="dash">
+        <div id="upper-bar">
+            <h3 class="view-hdr">Settings</h3>
+        </div>
+        <div id="left-bar">
+            <a href="/dashboard/boards" class="views views-unsel" role="button"><i class="bi bi-grid-1x2-fill"></i></a>
+            <a href="/dashboard/lists" class="views views-unsel" role="button"><i class="bi bi-kanban"></i></a>
+            <a href="/dashboard/stats" class="views views-unsel" role="button"><i class="bi bi-bar-chart-line"></i></a>
+        </div>
+        <div id="container">
+            <h3>Hi, {{user.user_name}}!</h3>
+            <div class="setting" id="stg-name">
+                <form action="/settings/change_name" method="POST">
+                    <label for="uname">Change username:</label>
+                    <input type="text" id="uname" name="uname" placeholder="{{user.user_name}}" minlength="4" maxlength="50" required>
+                    <input type="submit" value="Change">
+                </form>
+            </div>
+            <a class='btn' id="del-usr-btn" href="{{url_for('delete_confirmation')}}"></i>Delete Account</a>
+        </div>
+    </div>
+</body>
+{% endblock %}

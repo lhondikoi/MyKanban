@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    text-decoration: none;
+}
+
+a {
+    color: inherit;
+}
+
+textarea {
+    resize: none;
+}
+
+input, textarea {
+    border: inherit;
+    font-size: 0.8em;
+}
+
+input[type=submit] {
+    background:rgb(0, 89, 255);
+    color: white;
+}
+
+input[type=submit]:hover {
+    animation-name: btnhover;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+    cursor: pointer;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgb(57, 56, 71);
+    color: #fff;
+}
+
+.container {
+    max-width: 600px;
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 1.4em;
+}
+
+.container form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.container form > * {
+    min-width: 300px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.container > form > label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#del-usr-form input[type=radio] {
+    height: 20px;
+    width: 20px;
+}
+
+#error {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: max-content;
+    background: rgb(255, 255, 144);
+    padding: 20px 40px;
+    font-weight: 00;
+    border-radius: 10px;
+    text-align: center;
+    color: #000;
+}
+
+.close-btn {
+    border: none;
+    background: none;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.close-btn:hover {
+    cursor: pointer;
+}
+
+#hdr-back {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.back-btn {
+    font-weight: 800;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:#ffb404;
+    width: 50px;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+.btn {
+    background:rgba(255, 255, 255, 1);
+    padding: 7px;
+    border-radius: 5px;
+    color: #333;
+    min-width: max-content;
+    text-align: center;
+}
+
+.btn:hover {
+    box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+#del-usr-btn {
+    background: rgb(230, 0, 0);
+    color: white;
+}
+
+#del-usr-btn:hover {
+    animation-name: delbtnhover;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+    cursor: pointer;
+}
+
+/* ANIMATION KEYFRAMES */
+@keyframes btnhover {
+    from {
+        background:rgb(0, 89, 255);
+    }
+
+    to {
+        background:rgb(0, 62, 177);
+    }
+}
+
+@keyframes delbtnhover {
+    from {
+        background:rgb(230, 0, 0);
+    }
+
+    to {
+        background:rgb(210, 0, 0);
+    }
+}

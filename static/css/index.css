@@ -1,0 +1,161 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    font-family: sans-serif;
+}
+
+a {
+    color: inherit;
+}
+
+label {
+    color: #fff;
+}
+
+input {
+    border: inherit;
+    font-size: 0.8em;
+}
+
+#remember {
+    width: 20px;
+    height: 20px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #fff;
+    color: #fff;
+    overflow: visible;
+    text-align: center;
+    height: 1px;
+    margin: 15px 0;
+    padding: 0 10px;
+    width: 85%;
+    align-self: center;
+}
+
+hr:after {
+    background:rgb(57, 56, 71);
+    content: 'OR';
+    font-size: 0.8em;
+    padding: 0 5px;
+    position: relative;
+    top: -10px;
+}
+
+.btn {
+    background:rgb(0, 89, 255);
+    color: white;
+}
+
+.btn:hover {
+    animation-name: submithover;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+    cursor: pointer;
+}
+
+body {
+    background: rgb(57, 56, 71);
+}
+
+#center {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.container {
+    height: 100vh;
+    width: 320px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 15px;
+}
+
+.banner {
+    text-align: center;
+    font-size: 1.6em;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.form-login {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+}
+
+.form-login input[type=text] {
+    color: #333;
+}
+
+.form-login input {
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-evenly;
+    color: #fff;
+}
+
+.btns * {
+    width: 100%;
+}
+
+a.btn {
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#error {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: max-content;
+    background: rgb(255, 255, 144);
+    padding: 20px 40px;
+    font-weight: 00;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.close-btn {
+    border: none;
+    background: none;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.close-btn:hover {
+    cursor: pointer;
+}
+
+/* ANIMATION KEYFRAMES */
+@keyframes submithover {
+    from {
+        background:rgb(0, 89, 255);
+    }
+
+    to {
+        background:rgb(0, 62, 177);
+    }
+}

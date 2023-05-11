@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Dashboard</title>
+<link rel="stylesheet" href="{{  url_for('static', filename='css/view_board.css')  }}">
+{% endblock %}
+
+{% block body %}
+{% include 'dialog.html' %}
+<body>
+    <header id="app-title-bar">
+        <div id="user-menu">
+            <a href="{{url_for('settings')}}" id="user-settings" role="button"><i class="bi bi-person-circle"></i></a>
+            <span>Welcome back, {{user.user_name}}!</span>
+        </div>
+        <span id="app-title">MyKanban</span>
+        <a href="{{url_for('logout')}}">Logout</a>
+    </header>
+    <div id="dash">
+        <div id="upper-bar">
+            <h3 class="view-hdr">Boards</h3>
+        </div>
+        <div id="left-bar">
+            <a href="{{url_for('boards')}}" class="views views-current" role="button"><i class="bi bi-grid-1x2-fill"></i></a>
+            <a href="{{url_for('lists')}}" class="views views-unsel" role="button"><i class="bi bi-kanban"></i></a>
+            <a href="{{url_for('dashboard_stats')}}" class="views views-unsel" role="button"><i class="bi bi-bar-chart-line"></i></a>
+        </div>
+        <div id="container">
+            {% if user.boards|length != 0 %}
+                {% for board in user.boards %}
+                    <div class="board">
+                        <div class="board-title">
+                            <a href="{{url_for('dashboard_lists', board_id=board.board_id)}}"><h3>{{board.board_name}}</h3></a>
+                        </div>
+                        <div class="board-btns">
+                            <a href="{{url_for('edit_board', board_id=board.board_id)}}"><i class="bi bi-pencil-square"></i></a>
+                            <a href="{{url_for('export', entity='board', entity_id=board.board_id)}}"><i class="bi bi-download"></i></a>
+                            <a href="{{url_for('delete_board', board_id=board.board_id)}}"><i class="bi bi-trash-fill"></i></a>
+                        </div>
+                    </div>
+                {% endfor %}
+                    <a class="btn" href="{{url_for('add_board')}}" role="button"><i class="bi bi-plus"></i>Add Board</a>
+            {% else %}
+                <div class="empty">
+                    <p>You don't have any boards!</p>
+                    <a class="btn" href="{{url_for('add_board')}}" role="button">
+                        <i class="bi bi-plus"></i> Add Board
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+{% endblock %}

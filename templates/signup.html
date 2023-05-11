@@ -1,0 +1,18 @@
+{% extends 'base2.html' %}
+
+{% block head %}
+<title>Sign Up</title>
+{% endblock %}
+
+{% block body%}
+{% include 'dialog.html' %}
+    <div id="hdr-back">
+        <h3>Sign Up</h3>
+        <a href="{{url_for('index')}}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+    </div>
+    <form action="{{url_for('signup')}}" method="POST">
+        <input type="text" name="usr" minlength="4" maxlength="50" placeholder="Enter your name" required autofocus>
+        <input type="password" name="pwd" minlength="8" maxlength="20" placeholder="Enter your password" required>
+        <input type="submit" value="Sign up">
+    </form>
+{% endblock%}

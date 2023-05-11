@@ -1,0 +1,56 @@
+#container {
+    padding: 20px 0;
+    margin: 0 auto;
+    color: white;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+    width: 400px;
+    font-size: 1.25em;
+}
+
+#msg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid darkred;
+    background: rgb(255, 210, 210);
+    padding: 10px;
+    color: red;
+    font-weight: 600;
+}
+
+#stg-name form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.setting input {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+input[type=submit] {
+    background:rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+input[type=submit]:hover {
+    animation-name: submithover;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+    cursor: pointer;
+}
+
+/* ANIMATION KEYFRAMES */
+@keyframes submithover {
+    from {
+        background:rgba(0, 0, 0, 0.2);
+    }
+
+    to {
+        background:rgba(0, 0, 0, 0.35);
+    }
+}

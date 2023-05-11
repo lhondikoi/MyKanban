@@ -1,0 +1,16 @@
+{% extends 'base2.html' %}
+
+{% block head %}
+<title>Dashboard</title>
+{% endblock %}
+
+{% block body %}
+<div id="hdr-back">
+<h3>Edit Board</h3>
+<a href="{{url_for('boards')}}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+</div>
+<form action="/dashboard/boards/{{board.board_id}}/edit" method="POST">
+    <input type="text" name="bname" minlength="4" maxlength="50" placeholder="{{board.board_name}}" autofocus required>
+    <input type="submit" value="Rename">
+</form>
+{% endblock %}

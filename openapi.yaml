@@ -1,0 +1,867 @@
+openapi: 3.0.0
+info:
+  title: "MyKanban API"
+  description: >
+    This document describes the RESTful API developed for the MyKanban app. It has basic CRUD operations on boards, lists, and cards, as well as some additional API for getting statistics and summaries.
+    <h3> Error Codes </h3> 
+    <table>
+      <thead>
+        <th>Resource</th>
+        <th>Error Code</th>
+        <th>Message</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Board</td>
+        <td>B01</td>
+        <td>{user_id} is required and must be an integer</td>
+      </tr>
+      <tr>
+        <td>Board</td>
+        <td>B02</td>
+        <td>{board_name} is required and must be a non-empty string between 4 and 50 characters</td>
+      </tr>
+      <tr>
+        <td>Board</td>
+        <td>B03</td>
+        <td>{board_name} must be a non-empty string between 4 and 50 characters</td>
+      </tr>
+      <tr>
+        <td>Board</td>
+        <td>B04</td>
+        <td>Cannot delete board because it is not empty</td>
+      </tr>
+        <td><hr></td>
+        <td><hr></td>
+        <td><hr></td>
+      </tr>
+      <tr>
+        <td>List</td>
+        <td>L01</td>
+        <td>{board_id} is required and must be an integer</td>
+      </tr>
+      <tr>
+        <td>List</td>
+        <td>L02</td>
+        <td>{list_name} is required and must be a non-empty string between 4 and 50 characters</td>
+      </tr>
+      <tr>
+        <td>List</td>
+        <td>L03</td>
+        <td>{list_name} must be a non-empty string between 4 and 50 characters</td>
+      </tr>
+      <tr>
+        <td>List</td>
+        <td>L04</td>
+        <td>Cannot delete list because it is not empty</td>
+      </tr>
+      <tr>
+        <td>List</td>
+        <td>L05</td>
+        <td>Cannot move cards to a list which is in a different board</td>
+      </tr>
+      <tr>
+        <td>List</td>
+        <td>L06</td>
+        <td>Card is already in this list</td>
+      </tr>
+      <tr>
+        <td><hr></td>
+        <td><hr></td>
+        <td><hr></td>
+      </tr>
+      <tr>
+        <td>Card</td>
+        <td>C01</td>
+        <td>{list_id} is required and must be an integer</td>
+      </tr>
+      <tr>
+        <td>Card</td>
+        <td>C02</td>
+        <td>{title} is required and must be a non-empty string between 4 and 50 characters</td>
+      </tr>
+      <tr>
+        <td>Card</td>
+        <td>C03</td>
+        <td>{title} must be non-empty string between 4 and 50 characters</td>
+      </tr>
+      <tr>
+        <td>Card</td>
+        <td>C04</td>
+        <td>{deadline} should be in the format "yyyy-mm-ddThh:mm:ss"</td>
+      </tr>
+      <tr>
+        <td>Card</td>
+        <td>C05</td>
+        <td>{deadline} cannot be lesser than the current time</td>
+      </tr>
+      <tr>
+        <td>Card</td>
+        <td>C06</td>
+        <td>{completed} must be a boolean (true/false)</td>
+      </tr>
+      <tr>
+        <td>Card</td>
+        <td>C07</td>
+        <td>Card is already in this list</td>
+      </tr>
+      <tr>
+        <td>Card</td>
+        <td>C08</td>
+        <td>List belongs to a different board</td>
+      </tr>
+      <tr>
+        <td><hr></td>
+        <td><hr></td>
+        <td><hr></td>
+      </tr>
+      <tr>
+        <td>Stats</td>
+        <td>S01</td>
+        <td>{start_date} is required and must be in the format "yyyy-mm-dd"</td>
+      </tr>
+      <tr>
+        <td>Stats</td>
+        <td>S02</td>
+        <td>{end_date} is required and must be in the format "yyyy-mm-dd</td>
+      </tr>
+      <tr>
+        <td>Stats</td>
+        <td>S03</td>
+        <td>{start_date} is before user_creation date</td>
+      </tr>
+      <tr>
+        <td>Stats</td>
+        <td>S04</td>
+        <td>Date range cannot be greater than 84 days</td>
+      </tr>
+  version: "1.0.0"
+servers:
+  - url: "http://127.0.0.1:5000/"
+tags:
+  - name: "board"
+    description: "Boards of a particular user"
+  - name: "list"
+    description: "Lists of a particular user"
+  - name: "card"
+    description: "Cards of a particular user"
+  - name: "stats"
+    description: "Stats for a particular user"
+paths:
+  /api/board/{board_id}:
+    get:
+      tags:
+        - "board"
+      summary: "Find board by ID"
+      parameters:
+        - in: path
+          name: board_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                title: board object
+                type: object
+                properties:
+                  board_id:
+                    type: integer
+                    example: 1
+                  board_name:
+                    type: string
+                    example: "To do"
+                  created:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+        '404':
+          description: "Resource not found"
+        '500':
+          description: "Internal server error"
+    put:
+      tags:
+        - "board"
+      summary: "Update an existing board"
+      parameters:
+        - in: path
+          name: board_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                board_name:
+                  type: string
+                  example: "Doing"
+      responses:
+        '200':
+          description: "Successfuly updated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  board_id:
+                    type: integer
+                    example: 2
+                  board_name:
+                    type: string
+                    example: "Doing"
+                  created:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+        '404':
+          description: "List not found"
+        '500':
+          description: "Internal Server Error"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+    delete:
+      tags:
+        - "board"
+      summary: "Delete an existing board"
+      parameters:
+        - in: path
+          name: board_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: "Successfully deleted"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '404':
+          description: "List not found"
+        '500':
+          description: "Intenal Server Error"
+  /api/board:
+    post:
+      tags:
+        - "board"
+      summary: "Create a new board"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                board_id:
+                  type: integer
+                  example: 1
+                board_name:
+                  type: string
+                  example: "Cooking"
+      responses:
+        '201':
+          description: "Successfully created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  board_id:
+                    type: integer
+                    example: 1
+                  board_name:
+                    type: string
+                    example: "Cooking"
+                  created:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+        '400':
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '500':
+          description: "Internal server error"
+  /api/list/{list_id}:
+    get:
+      tags:
+        - "list"
+      summary: "Find list by ID"
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                title: list object
+                type: object
+                properties:
+                  list_id:
+                    type: integer
+                    example: 1
+                  list_name:
+                    type: string
+                    example: "To do"
+                  created:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+        '404':
+          description: "Resource not found"
+        '500':
+          description: "Internal server error"
+    put:
+      tags:
+        - "list"
+      summary: "Update an existing list"
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                list_name:
+                  type: string
+                  example: "Doing"
+      responses:
+        '200':
+          description: "Successfuly updated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list_id:
+                    type: integer
+                    example: 2
+                  list_name:
+                    type: string
+                    example: "Doing"
+                  created:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+        '404':
+          description: "List not found"
+        '500':
+          description: "Internal Server Error"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+    delete:
+      tags:
+        - "list"
+      summary: "Delete an existing list"
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: "Successfully deleted"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '404':
+          description: "List not found"
+        '500':
+          description: "Intenal Server Error"
+  /api/list:
+    post:
+      tags:
+        - "list"
+      summary: "Create a new list"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                board_id:
+                  type: integer
+                  example: 1
+                list_name:
+                  type: string
+                  example: "Cooking"
+      responses:
+        '201':
+          description: "Successfully created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list_id:
+                    type: integer
+                    example: 1
+                  list_name:
+                    type: string
+                    example: "Cooking"
+                  created:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+        '400':
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '500':
+          description: "Internal server error"
+  /api/list/{list_id}/{mlist_id}:
+    delete:
+      tags:
+        - "list"
+      summary: "Delete an existing list after moving its cards to a different list"
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          name: mlist_id
+          required: true
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '200':
+          description: "Successfully moved cards and deleted"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '404':
+          description: "List not found"
+        '500':
+          description: "Intenal Server Error"
+  /api/card/{card_id}:
+    get:
+      tags:
+        - "card"
+      summary: "Find card by ID"
+      parameters:
+        - in: path
+          name: "card_id"
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                title: card object
+                type: object
+                properties:
+                  card_id:
+                    type: integer
+                    example: 1
+                  created:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  updated:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  title:
+                    type: string
+                    example: "Bake a cake"
+                  content:
+                    type: string
+                    example: "Use flour."
+                  deadline:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  completed:
+                    type: boolean
+                    example: true
+                  completed_datetime:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+        '404':
+          description: "Resource not found"
+        '500':
+          description: "Internal server error"
+    put:
+      tags:
+        - "card"
+      summary: "Update an existing card"
+      parameters:
+        - in: path
+          name: card_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Bake a pie"
+                content:
+                  type: string
+                  example: "Don't use baking powder."
+                deadline:
+                  type: string
+                  example: "2022-07-26T22:02:05.708807"
+                completed:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: "Successfuly updated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  card_id:
+                    type: integer
+                    example: 1
+                  created:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  updated:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  title:
+                    type: string
+                    example: "Bake a cake"
+                  content:
+                    type: string
+                    example: "Use flour."
+                  deadline:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  completed:
+                    type: boolean
+                    example: true
+                  completed_datetime:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '404':
+          description: "Card not found"
+        '500':
+          description: "Internal Server Error"
+    delete:
+      tags:
+        - "card"
+      summary: "Delete an existing card"
+      parameters:
+        - in: path
+          name: card_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: "Successfully deleted"
+        '404':
+          description: "Card not found"
+        '500':
+          description: "Intenal Server Error"
+  /api/card:
+    post:
+      tags:
+        - "card"
+      summary: "Create a new card"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                list_id:
+                  type: integer
+                  example: 1
+                title:
+                  type: string
+                  example: "Bake an apple pie"
+                content:
+                  type: string
+                  example: "Use apples."
+                deadline:
+                  type: string
+                  example: "2022-07-26T22:02:05"
+      responses:
+        '201':
+          description: "Successfully created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  card_id:
+                    type: integer
+                    example: 1
+                  created:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  updated:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  title:
+                    type: string
+                    example: "Bake a cake"
+                  content:
+                    type: string
+                    example: "Use flour."
+                  deadline:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  completed:
+                    type: boolean
+                    example: true
+                  completed_datetime:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+        '400':
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '500':
+          description: "Internal server error"
+    
+  /api/card/{card_id}/{list_id}:
+    put:
+      tags:
+        - "card"
+      summary: "Move card to a different card"
+      parameters:
+        - in: path
+          name: card_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: "Successfuly moved"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  card_id:
+                    type: integer
+                    example: 1
+                  created:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  updated:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  title:
+                    type: string
+                    example: "Bake a cake"
+                  content:
+                    type: string
+                    example: "Use flour."
+                  deadline:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+                  completed:
+                    type: boolean
+                    example: true
+                  completed_datetime:
+                    type: string
+                    example: "2022-07-26T22:02:05.708807"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '404':
+          description: "List / Card not found"
+        '500':
+          description: "Internal Server Error"
+  
+  /api/stats/breakdown/{user_id}:
+    get:
+      tags:
+       - "stats"
+      summary: "Get the number of completed / pending / overdue cards of a user"
+      parameters:
+        - in: path
+          name: "user_id"
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                title: "breakdown"
+                type: object
+                properties:
+                  completed:
+                    type: integer
+                    example: 1
+                  pending:
+                    type: integer
+                    example: 1
+                  overdue:
+                    type: integer
+                    example: 1
+        '404':
+          description: "User not found"
+        '500':
+          description: "Internal server error"
+  
+  /api/stats/timeline/{user_id}:
+    get:
+      tags:
+        - "stats"
+      summary: "Get the number of cards completed each day for a given date range"
+      parameters:
+        - in: path
+          name: "user_id"
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_date:
+                  type: string
+                  example: "2022-08-10"
+                end_date:
+                  type: string
+                  example: "2022-08-18"
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                title: "timeline"
+                type: array
+                items:
+                  properties:
+                    date:
+                      type: string
+                      example: "2022-08-22"
+                    completed:
+                      type: integer
+                      example: 1
+        '404':
+          description: "Resource not found"
+        '500':
+          description: "Internal server error"

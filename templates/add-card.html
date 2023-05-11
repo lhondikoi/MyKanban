@@ -1,0 +1,32 @@
+{% extends 'base2.html' %}
+
+{% block head %}
+<title>Dashboard</title>
+{% endblock %}
+
+{% block body %}
+{% include 'dialog.html' %}
+<div id="hdr-back">
+<h3>Add Card</h3>
+<a href="{{url_for('dashboard_lists', board_id=bid)}}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+</div>
+<form class="add-card-form" action="{{url_for('add_card', list_id=lid)}}" method="POST">
+    <input
+        type="text"
+        name="ctitle"
+        placeholder="Card title"
+        minlength="4"
+        maxlength="50"
+        autofocus
+        required>
+    <textarea
+        name="description"
+        placeholder="Description"
+        cols="30"
+        rows="5"></textarea>
+    <input
+        type="datetime-local"
+        name="deadline">
+        <input type="submit" value="Create">
+</form>
+{% endblock %}

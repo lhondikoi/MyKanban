@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Dashboard</title>
+<link rel="stylesheet" href="{{  url_for('static', filename='css/view_list.css')  }}">
+{% endblock %}
+
+{% block body %}
+{% include 'dialog.html' %}
+<body>
+    <header id="app-title-bar">
+        <div id="user-menu">
+            <a href="{{url_for('settings')}}" id="user-settings" role="button"><i class="bi bi-person-circle"></i></a>
+            <span>Welcome back, {{user.user_name}}!</span>
+        </div>  
+        <span id="app-title">MyKanban</span>
+        <a href="{{url_for('logout')}}">Logout</a>
+    </header>
+    <div id="dash">
+        <div id="upper-bar">
+            <h3 class="view-hdr">Lists</h3>
+            <div class="tabs">
+                {% if dboard != false %}
+                    {% for board in user.boards %}
+                            {% if board != dboard %}
+                                <a class="board-tab" href="{{url_for('dashboard_lists', board_id=board.board_id)}}">{{board.board_name}}</a>
+                            {% else %}
+                                <a class="board-tab board-tab-current" href="{{url_for('dashboard_lists', board_id=board.board_id)}}"><strong>{{board.board_name}}</strong></a>
+                            {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div id="left-bar">
+            <a href="{{url_for('boards')}}" class="views views-unsel" role="button"><i class="bi bi-grid-1x2-fill"></i></a>
+            <a href="{{url_for('lists')}}" class="views views-current" role="button"><i class="bi bi-kanban"></i></a>
+            <a href="{{url_for('dashboard_stats')}}" class="views views-unsel" role="button"><i class="bi bi-bar-chart-line"></i></a>
+        </div>
+        <div id="container">
+            {% if dboard != false %}
+                {% if dboard.lists|length != 0 %}
+                    {% for list in dboard.lists %}
+                        <div class="list">
+                            <div class="list-hdr">
+                                <div class="list-hdr-title">
+                                    <h3>{{list.list_name}}</h3>
+                                    <span>({{clist[list.list_id][0]}}/{{clist[list.list_id][1]}})</span>
+                                </div>
+                                <div class="list-hdr-btns">
+                                    <a href="{{url_for('rename_list', list_id=list.list_id)}}"><i class="bi bi-pencil-square"></i></a>
+                                    <a href="{{url_for('export', entity='list', entity_id=list.list_id)}}"><i class="bi bi-download"></i></a>
+                                    <div class="list-del">
+                                        <div id="list-del-form-open-btn-{{list.list_id}}" class="list-del-btn" onclick="opendlg('list-del-form-{{list.list_id}}', 'flex')"><i class="bi bi-trash-fill"></i></div>
+                                        <div id="list-del-form-{{list.list_id}}" class="list-del-form">
+                                            {% if dboard.lists|length > 1 and list.cards|length != 0 %}
+                                                <a href="{{url_for('delete_list', list_id=list.list_id)}}">Delete list and cards</a>
+                                                <span>Delete list and move cards to:</span>
+                                                {% for mlist in dboard.lists %}
+                                                    {% if mlist != list %}
+                                                        <a href="{{url_for('move_delete_list', list_id=list.list_id, mlist_id=mlist.list_id)}}">{{mlist.list_name}}</a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                                <a href="{{url_for('delete_list', list_id=list.list_id)}}">Delete list</a>
+                                            {% endif %}
+                                                <button class="list-del-form-close-btn" onclick="closedlg('list-del-form-{{list.list_id}}')"><i class="bi bi-x-lg"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cards">
+                                {% for card in list.cards %}
+                                    <div class="card {% if card.completed == true%}comp-card{% endif %}">
+                                        <div class="card-body-hdr">
+                                            <h4 class="card-title">{{card.title}}</h4>
+                                            <div class="card-options">
+                                                {% if dboard.lists|length > 1 %}
+                                                <div class="card-move">
+                                                    <div id="card-move-form-open-btn-{{card.card_id}}" class="card-option-btn" onclick="opendlg('card-move-form-{{card.card_id}}', 'flex')"><i class="bi bi-arrow-left-right"></i></div>
+                                                    <div id="card-move-form-{{card.card_id}}" class="card-move-form">
+                                                        <span>Move to:</span>
+                                                        {% for list in dboard.lists %}
+                                                        {% if card.list.list_id != list.list_id %}
+                                                        <a href="{{url_for('move_card', card_id=card.card_id, list_id=list.list_id)}}">{{list.list_name}}</a>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        <button class="card-move-form-close-btn" onclick="closedlg('card-move-form-{{card.card_id}}')"><i class="bi bi-x-lg"></i></button>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                                <a class="card-option-btn" href="{{url_for('edit_card', card_id=card.card_id)}}"><i class="bi bi-pencil-square"></i></a>
+                                                <a class="card-option-btn" href="{{url_for('delete_card', card_id=card.card_id)}}"><i class="bi bi-trash-fill"></i></a>
+                                                <form class="card-option-btn" action="{{url_for('comp_card', card_id=card.card_id)}}" method="POST">
+                                                    {% if card.completed == false %}
+                                                    <input type="checkbox" name="comp" id="comp" value="checked" onclick="submit()">
+                                                    {% else %}
+                                                    <input type="checkbox" name="comp" id="comp" value="checked" onclick="submit()" checked>
+                                                    {% endif %}
+                                                </form>
+                                            </div>
+                                        </div>
+                                        {% if card.content %}
+                                            <div class="card-body-main">
+                                                <p>{{card.content}}</p>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-body-ftr">
+                                        {% if card.deadline is not none %}
+                                            <div class="deadline">
+                                                <i class="bi bi-clock"></i></i>&nbsp;<span>{{card.deadline.strftime('%d %b, %Y')}}</span>&nbsp•&nbsp;<span>{{card.deadline.strftime('%I:%M %p')}}</span>
+                                            </div>
+                                        {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="add-card">
+                                <a href="{{url_for('add_card', list_id=list.list_id)}}"><i class="bi bi-plus"></i>Add Card</a>
+                            </div>
+                        </div>
+                    {% endfor%}
+                        <a class="btn" href="{{url_for('add_list', board_id=dboard.board_id)}}"><i class="bi bi-plus"></i>Add list</a>
+                    {% else %}
+                        <div class="empty">
+                            <p>This board doesn't have any lists.</p>
+                            <a class="btn" href="{{url_for('add_list', board_id=dboard.board_id)}}"><i class="bi bi-plus"></i>Add list</a>
+                        </div>
+                {% endif %}
+            {% else %}
+                <div class="empty">
+                    <p>You need to create a board first!</p>
+                    <a class="btn" href="{{url_for('add_board')}}" role="button"><i class="bi bi-plus"></i> Add Board</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+{% endblock %}

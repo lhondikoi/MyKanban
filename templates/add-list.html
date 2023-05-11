@@ -1,0 +1,17 @@
+{% extends 'base2.html' %}
+
+{% block head %}
+<title>Dashboard</title>
+{% endblock %}
+
+{% block body %}
+{% include 'dialog.html' %}
+<div id="hdr-back">
+    <h3>Add List</h3>
+    <a href="{{url_for('dashboard_lists', board_id=bid)}}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+</div>
+<form action="/dashboard/lists/{{bid}}/new" method="POST">
+    <input type="text" name="lname" minlength="4" maxlength="50" placeholder="Enter a name for your list" autofocus required>
+    <input type="submit" value="Create">
+</form>
+{% endblock %}

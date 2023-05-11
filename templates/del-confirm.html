@@ -1,0 +1,24 @@
+{% extends 'base2.html' %}
+
+{% block head %}
+<title>Confirmation Action</title>
+{% endblock %}
+
+{% block body %}
+{% include 'dialog.html' %}
+<!-- <div id="hdr-back">
+<h3>Delete</h3>
+<a href="{{url_for('settings')}}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+</div> -->
+<h3>Are you sure you want to delete your account?</h3>
+<form id="del-usr-form" action="{{url_for('delete_confirmation')}}" method="POST">
+    <label for="yes">
+    <input type="radio" name="choice" id="yes" value="yes"> Yes
+    </label>
+    <label for="no">
+        <input type="radio" name="choice" id="no" value="no"> No
+    </label>
+    <input type="submit" value="Confirm">
+</form>
+<a class="btn" href="{{url_for('settings')}}">No, take me back</a>
+{% endblock %}

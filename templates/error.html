@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{  url_for('static', filename='/css/error.css')  }}">
+    <title>Not Found</title>
+</head>
+<body>
+    <div class="container">
+        {% if e == '404' %}
+        <img id="error-img" src="{{url_for('static', filename='img/404.svg')}}" alt="404 Not Found">
+        {% elif e == '400' %}
+        <img id="error-img" src="{{url_for('static', filename='img/400.svg')}}" alt="400 Bad Request">
+        {% endif %}
+        <h5 id="error-msg">{{msg}}</h5>
+    </div>
+</body>
+</html>

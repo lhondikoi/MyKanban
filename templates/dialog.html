@@ -1,0 +1,10 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div id="error">
+            {% for message in messages %}
+            <p>{{message}}</p>
+            {% endfor %}
+            <button class="close-btn" onclick="closedlg('error')"><i class="bi bi-x-lg"></i></button>
+        </div>
+    {% endif %}
+{% endwith %}
